@@ -17,4 +17,8 @@ export interface CrmRecord {
   OBSERVACION: string;
   AGENTE_ASIGNADO: string;
   FECHA_ASIGNACION: string;
+  _displayedStatus?: string;
+  _originalMunicipio?: string;
+  _originalDepartamento?: string;
+  _originalEdad?: number;
 }
