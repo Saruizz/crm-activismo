@@ -1,0 +1,193 @@
+<div class="flex-col min-h-screen bg-gray-900 text-gray-100 font-sans">
+  <header class="bg-gray-800/70 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-md border-b border-gray-700">
+    <div class="flex items-center gap-4">
+      <i class="fas fa-users-cog text-2xl text-indigo-400"></i>
+      <h1 class="text-xl font-bold hidden sm:block">CRM Activismo</h1>
+      <span class="px-3 py-1 bg-indigo-900/50 text-indigo-300 rounded-full text-sm font-medium border border-indigo-500/30">
+        Agente: <span class="font-bold">{{ agentId }}</span>
+      </span>
+    </div>
+    <div class="flex gap-3">
+      <button (click)="getCarga()" class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg font-medium shadow-lg transition flex items-center gap-2 transform hover:scale-105">
+        <i class="fas fa-download"></i> <span class="hidden sm:inline">Obtener Carga</span>
+      </button>
+      <button (click)="logout()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg font-medium border border-gray-600 transition flex items-center gap-2">
+        <i class="fas fa-sign-out-alt"></i> <span class="hidden sm:inline">Salir</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-1 p-6 max-w-7xl mx-auto w-full">
+    <div *ngIf="isLoading()" class="flex justify-center items-center py-20">
+      <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-500"></div>
+    </div>
+    
+    <div *ngIf="!isLoading()" class="mb-6">
+      <div class="relative max-w-md">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="fas fa-search text-gray-400"></i>
+        </div>
+        <input type="text" [ngModel]="searchTerm()" (ngModelChange)="updateSearch($event)" placeholder="Buscar por nombre, cédula o teléfono..." class="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition shadow-inner">
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading()" class="mb-8 overflow-x-auto pb-2">
+      <div class="flex gap-2 min-w-max">
+        <button *ngFor="let s of ['POR_CONTACTAR', 'CONTACTADO', 'RESPONDIO', 'NO_RESPONDIO', 'INHABILITADO']" 
+                (click)="selectedStatus.set(s)"
+                [class.bg-indigo-600]="selectedStatus() === s"
+                [class.text-white]="selectedStatus() === s"
+                [class.bg-gray-800]="selectedStatus() !== s"
+                [class.text-gray-400]="selectedStatus() !== s"
+                [class.border-indigo-500]="selectedStatus() === s"
+                class="px-5 py-2.5 rounded-xl font-bold border border-transparent transition shadow-lg flex items-center gap-2">
+          {{ s }}
+          <span class="px-2 py-0.5 bg-black/30 rounded-full text-xs">{{ getStatusCounts(s) }}</span>
+        </button>
+      </div>
+    </div>
+    
+    <div *ngIf="!isLoading() && filteredRecords.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div *ngFor="let r of filteredRecords" 
+           [class.border-yellow-500]="needsReminder(r)"
+           [class.shadow-yellow-900/20]="needsReminder(r)"
+           [class.ring-2]="needsReminder(r)"
+           [class.ring-yellow-500/30]="needsReminder(r)"
+           class="bg-gray-800/70 backdrop-blur-lg border border-gray-700 rounded-xl overflow-hidden flex flex-col transform transition hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-500/50">
+        
+        <div class="p-4 border-b border-gray-700 bg-gray-800/80 flex justify-between items-start">
+          <div>
+            <h3 class="font-bold text-lg text-white">{{ r.NOMBRE || 'Sin Nombre' }}</h3>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-sm text-gray-400"><i class="fas fa-id-card"></i> {{ r.CEDULA || 'N/A' }}</span>
+              <span *ngIf="!isCcValid(r.CEDULA)" class="text-xs bg-red-900/80 text-red-200 px-2 py-0.5 rounded border border-red-500 shadow-lg shadow-red-500/20" title="Cédula inválida">
+                <i class="fas fa-exclamation-triangle"></i> Inválida
+              </span>
+            </div>
+          </div>
+          <span class="px-3 py-1 bg-gray-700 text-gray-300 text-xs rounded-full font-bold border border-gray-600 shadow-inner">{{ r.ESTADO || 'NUEVO' }}</span>
+        </div>
+
+        <div class="p-5 flex-1 space-y-5 bg-gray-800/40">
+          <div class="grid grid-cols-2 gap-4 text-sm bg-gray-900/50 p-3 rounded-lg border border-gray-700/50">
+            <div>
+              <p class="text-gray-500 mb-1 text-xs uppercase font-semibold"><i class="fas fa-phone-alt"></i> Teléfono</p>
+              <a [href]="getWaLink(r)" (click)="onContactClick(r)" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1 transition">
+                {{ r.TELEFONO || 'N/A' }} <i class="fab fa-whatsapp text-green-500"></i>
+              </a>
+            </div>
+            <div>
+              <p class="text-gray-500 mb-1 text-xs uppercase font-semibold"><i class="fas fa-map-marker-alt"></i> Ubicación</p>
+              <p class="text-gray-200 truncate">{{ r.MUNICIPIO || '-' }}, {{ r.DEPARTAMENTO || '-' }}</p>
+            </div>
+            <div>
+              <p class="text-gray-500 mb-1 text-xs uppercase font-semibold"><i class="fas fa-user-clock"></i> Edad</p>
+              <p class="text-gray-200">{{ r.EDAD || '-' }}</p>
+            </div>
+          </div>
+
+          <div *ngIf="needsReminder(r)" class="bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-3 flex items-center justify-between shadow-lg shadow-yellow-900/20">
+            <span class="text-yellow-400 text-sm font-medium flex items-center gap-2"><i class="fas fa-clock"></i> >24h sin respuesta</span>
+            <a [href]="getWaLink(r)" (click)="onContactClick(r)" target="_blank" class="animate-pulse bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-white text-xs px-4 py-2 rounded font-bold shadow-lg shadow-yellow-600/40 transition transform hover:scale-105">
+              <i class="fab fa-whatsapp text-lg"></i> RECORDATORIO
+            </a>
+          </div>
+
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-gray-400 mb-1 font-medium">Estado</label>
+                <select [(ngModel)]="r.ESTADO" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                  <option value="POR_CONTACTAR">POR_CONTACTAR</option>
+                  <option value="CONTACTADO">CONTACTADO</option>
+                  <option value="RESPONDIO">RESPONDIO</option>
+                  <option value="NO_RESPONDIO">NO_RESPONDIO</option>
+                  <option value="INHABILITADO">INHABILITADO</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-400 mb-1 font-medium">Compromiso</label>
+                <select [(ngModel)]="r.COMPROMISO" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                  <option value="VOCERO_FRIO">VOCERO_FRIO</option>
+                  <option value="VOCERO_FIDELIZADO">VOCERO_FIDELIZADO</option>
+                  <option value="SOLO_VOTANTE">SOLO_VOTANTE</option>
+                  <option value="INHABILITADO">INHABILITADO</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-400 mb-1 font-medium">Perfiles Previos</label>
+                <div class="w-full bg-gray-900/50 border border-gray-700 rounded-lg px-3 py-2 text-xs text-gray-400 min-h-[38px] flex items-center">
+                  {{ r.PERFILES || '(Vacío)' }}
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-400 mb-1 font-medium">Confirmar Perfil</label>
+                <select [(ngModel)]="r.PERFILES_CONFIRMADOS" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                  <option value="">-- Seleccionar --</option>
+                  <option value="DISPONIBILIDAD TOTAL">DISPONIBILIDAD TOTAL</option>
+                  <option value="GUARDIAN DEL VOTO">GUARDIAN DEL VOTO</option>
+                  <option value="LOGISTICA Y MOVILIZACION">LOGISTICA Y MOVILIZACION</option>
+                  <option value="LIDER TERRITORIAL">LIDER TERRITORIAL</option>
+                  <option value="MULTIPLICADOR DIGITAL">MULTIPLICADOR DIGITAL</option>
+                  <option value="TALENTO CREATIVO">TALENTO CREATIVO</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-400 mb-1 font-medium">Ingreso Grupo</label>
+                <select [(ngModel)]="r.INGRESO_AL_GRUPO" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                  <option value="">-- Seleccionar --</option>
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>
+                </select>
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-xs text-gray-400 mb-1 font-medium">Fecha Contacto</label>
+              <input type="datetime-local" [value]="formatDateForInput(r.FECHA_CONTACTO)" (change)="onDateChange(r, $event)" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+            </div>
+
+            <div *ngIf="r.ESTADO === 'INHABILITADO' || r.COMPROMISO === 'INHABILITADO'">
+              <label class="block text-xs text-gray-400 mb-1 font-medium text-red-400">Motivo de Inhabilitación *</label>
+              <select [(ngModel)]="r.OBSERVACION" class="w-full bg-gray-900 border-2 border-red-900/50 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-red-500 outline-none transition">
+                <option value="">-- Seleccionar Motivo --</option>
+                <option value="Número equivocado">Número equivocado</option>
+                <option value="No desea ser contactado">No desea ser contactado</option>
+                <option value="Hostilidad / molestia">Hostilidad / molestia</option>
+                <option value="Fallecido">Fallecido</option>
+                <option value="Menor de edad">Menor de edad</option>
+                <option value="Afirma no haberse inscrito">Afirma no haberse inscrito</option>
+                <option value="Espera auxilio económico">Espera auxilio económico</option>
+                <option value="Apoya otro candidato">Apoya otro candidato</option>
+                <option value="Milita en otra campaña">Milita en otra campaña</option>
+                <option value="Datos inconsistentes">Datos inconsistentes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-gray-800/90 border-t border-gray-700">
+          <button (click)="saveRecord(r)" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white rounded-lg font-semibold transition shadow-lg shadow-indigo-600/30 transform hover:-translate-y-0.5">
+            <i class="fas fa-save mr-1"></i> Guardar Cambios
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="!isLoading() && filteredRecords.length === 0" class="flex flex-col items-center justify-center py-32 text-gray-500">
+      <div class="bg-gray-800/50 p-8 rounded-full mb-6">
+        <i class="fas fa-check-double text-6xl text-emerald-500"></i>
+      </div>
+      <h2 class="text-2xl font-semibold text-gray-300">¡Todo al día en {{ selectedStatus() }}!</h2>
+      <p class="mt-3 text-center max-w-md">No hay registros pendientes en esta categoría. Revisa las otras pestañas o solicita más carga.</p>
+    </div>
+  </main>
+</div>
+
+<!-- Toast -->
+<div *ngIf="toastMessage()" class="fixed bottom-4 right-4 z-50 transition-all duration-300">
+  <div [ngClass]="toastType() === 'error' ? 'bg-red-600' : 'bg-emerald-600'" class="px-6 py-4 rounded-lg shadow-2xl text-white font-medium flex items-center gap-3">
+    <i [ngClass]="toastType() === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'" class="fas text-xl"></i>
+    <span>{{ toastMessage() }}</span>
+  </div>
+</div>
