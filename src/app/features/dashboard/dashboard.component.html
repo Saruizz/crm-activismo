@@ -81,15 +81,15 @@
               <input *ngIf="!r._originalEdad" type="number" [(ngModel)]="r.EDAD" placeholder="Edad" class="w-full bg-gray-900/50 border border-gray-700 focus:border-indigo-500 rounded px-2 py-1 text-sm text-gray-200 outline-none transition placeholder-gray-600">
               <p *ngIf="r._originalEdad" class="text-gray-200">{{ r.EDAD }}</p>
             </div>
-            <div class="col-span-2">
-              <p class="text-gray-500 mb-1 text-xs uppercase font-semibold"><i class="fas fa-map-marker-alt"></i> Ubicación</p>
-              <div class="flex gap-2">
-                <input *ngIf="!r._originalMunicipio" type="text" [(ngModel)]="r.MUNICIPIO" placeholder="Municipio" class="w-1/2 bg-gray-900/50 border border-gray-700 focus:border-indigo-500 rounded px-2 py-1 text-sm text-gray-200 outline-none transition placeholder-gray-600">
-                <span *ngIf="r._originalMunicipio" class="text-gray-200 truncate w-1/2 self-center">{{ r.MUNICIPIO }}</span>
-                
-                <input *ngIf="!r._originalDepartamento" type="text" [(ngModel)]="r.DEPARTAMENTO" placeholder="Depto" class="w-1/2 bg-gray-900/50 border border-gray-700 focus:border-indigo-500 rounded px-2 py-1 text-sm text-gray-200 outline-none transition placeholder-gray-600">
-                <span *ngIf="r._originalDepartamento" class="text-gray-200 truncate w-1/2 self-center"><ng-container *ngIf="r._originalMunicipio">,</ng-container> {{ r.DEPARTAMENTO }}</span>
-              </div>
+            <div>
+              <p class="text-gray-500 mb-1 text-xs uppercase font-semibold"><i class="fas fa-city"></i> Municipio</p>
+              <input *ngIf="!r._originalMunicipio" type="text" [(ngModel)]="r.MUNICIPIO" placeholder="Municipio" class="w-full bg-gray-900/50 border border-gray-700 focus:border-indigo-500 rounded px-2 py-1 text-sm text-gray-200 outline-none transition placeholder-gray-600">
+              <p *ngIf="r._originalMunicipio" class="text-gray-200 truncate">{{ r.MUNICIPIO }}</p>
+            </div>
+            <div>
+              <p class="text-gray-500 mb-1 text-xs uppercase font-semibold"><i class="fas fa-map-marker-alt"></i> Departamento</p>
+              <input *ngIf="!r._originalDepartamento" type="text" [(ngModel)]="r.DEPARTAMENTO" placeholder="Departamento" class="w-full bg-gray-900/50 border border-gray-700 focus:border-indigo-500 rounded px-2 py-1 text-sm text-gray-200 outline-none transition placeholder-gray-600">
+              <p *ngIf="r._originalDepartamento" class="text-gray-200 truncate">{{ r.DEPARTAMENTO }}</p>
             </div>
           </div>
 
