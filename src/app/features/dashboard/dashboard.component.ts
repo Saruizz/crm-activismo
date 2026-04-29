@@ -92,7 +92,12 @@ export class DashboardComponent implements OnInit {
     this.isLoading.set(true);
     this.crmService.fetchData(action).subscribe({
       next: (data) => {
-        data.forEach(r => (r as any)._displayedStatus = r.ESTADO || 'POR_CONTACTAR');
+        data.forEach(r => {
+          (r as any)._displayedStatus = r.ESTADO || 'POR_CONTACTAR';
+          (r as any)._originalMunicipio = r.MUNICIPIO;
+          (r as any)._originalDepartamento = r.DEPARTAMENTO;
+          (r as any)._originalEdad = r.EDAD;
+        });
         this.records.set(data);
         this.isLoading.set(false);
         this.showToast(action === 'obtener_carga' ? 'Carga obtenida exitosamente' : 'Registros sincronizados', 'success');
@@ -114,7 +119,10 @@ export class DashboardComponent implements OnInit {
     this.crmService.saveRecord(record).subscribe({
       next: () => {
         this.showToast('Registro guardado exitosamente', 'success');
-        (record as any)._displayedStatus = record.ESTADO;
+        record._displayedStatus = record.ESTADO;
+        record._originalMunicipio = record.MUNICIPIO;
+        record._originalDepartamento = record.DEPARTAMENTO;
+        record._originalEdad = record.EDAD;
         if (record.ESTADO === 'INHABILITADO' || record.COMPROMISO === 'INHABILITADO') {
           this.records.update(recs => recs.filter(r => r.id !== record.id));
         }
