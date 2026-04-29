@@ -1,0 +1,21 @@
+<div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gray-900 font-sans">
+  <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+  <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+
+  <div class="p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all z-10 bg-gray-800/70 backdrop-blur-xl border border-gray-700">
+    <div class="text-center mb-8">
+      <i class="fas fa-users-cog text-5xl text-indigo-500 mb-4"></i>
+      <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">CRM Activismo</h1>
+      <p class="text-gray-400 mt-2">Ingresa tu ID de Agente para continuar</p>
+    </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">ID de Agente</label>
+        <input formControlName="agentId" type="text" required class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-white outline-none transition-all placeholder-gray-500" placeholder="Ej: AGT-001">
+      </div>
+      <button type="submit" [disabled]="loginForm.invalid" class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-semibold shadow-lg transform transition hover:-translate-y-0.5 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed">
+        Ingresar al Sistema
+      </button>
+    </form>
+  </div>
+</div>
