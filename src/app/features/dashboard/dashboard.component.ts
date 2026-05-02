@@ -160,8 +160,17 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  getWaLink(record: CrmRecord): string {
-    const waMessage = encodeURIComponent(`Hola ${record.NOMBRE || ''}, te contactamos para...`);
+  getWaLink(record: CrmRecord, isReminder: boolean = false): string {
+    const groupLink = 'https://chat.whatsapp.com/CL71vUb9NNPDruoWKjj9jT';
+    let messageText = '';
+
+    if (isReminder) {
+      messageText = `Hola ${record.NOMBRE || ''}, ¡no olvides unirte a nuestro grupo de WhatsApp para estar al tanto de todo! Aquí tienes el enlace: ${groupLink}`;
+    } else {
+      messageText = `Hola ${record.NOMBRE || ''}, ¿cómo estás? Te contactamos para invitarte a hacer parte de nuestro equipo. Únete a nuestro grupo de WhatsApp en el siguiente enlace: ${groupLink}`;
+    }
+
+    const waMessage = encodeURIComponent(messageText);
     const phoneStr = (record.TELEFONO || '').toString().replace(/\D/g, '');
     return `https://wa.me/57${phoneStr}?text=${waMessage}`;
   }
