@@ -167,7 +167,7 @@ export class DashboardComponent implements OnInit {
     if (isReminder) {
       messageText = `Hola ${record.NOMBRE || ''}, ¡no olvides unirte a nuestro grupo de WhatsApp para estar al tanto de todo! Aquí tienes el enlace: ${groupLink}`;
     } else {
-      messageText = `Hola ${record.NOMBRE || ''}, ¿cómo estás? Te contactamos para invitarte a hacer parte de nuestro equipo. Únete a nuestro grupo de WhatsApp en el siguiente enlace: ${groupLink}`;
+      messageText = `Hola, estamos organizando el equipo de apoyo a la candidatura del Dr. Carlos Caicedo #TePagamosPorEstudiar.\n\n¿Confirmas si deseas participar como vocero?\nÚnete aquí para formalizar tu participación: ${groupLink}`;
     }
 
     const waMessage = encodeURIComponent(messageText);
