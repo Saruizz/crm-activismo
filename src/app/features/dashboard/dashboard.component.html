@@ -33,7 +33,7 @@
 
     <div *ngIf="!isLoading()" class="mb-8 overflow-x-auto pb-2">
       <div class="flex gap-2 min-w-max">
-        <button *ngFor="let s of ['POR_CONTACTAR', 'CONTACTADO', 'RESPONDIO', 'NO_RESPONDIO', 'INHABILITADO']" 
+        <button *ngFor="let s of ['POR_CONTACTAR', 'CONTACTADO', 'RESPONDIO', 'INHABILITADO']" 
                 (click)="selectedStatus.set(s)"
                 [class.bg-indigo-600]="selectedStatus() === s"
                 [class.text-white]="selectedStatus() === s"
@@ -108,7 +108,6 @@
                   <option value="POR_CONTACTAR">POR_CONTACTAR</option>
                   <option value="CONTACTADO">CONTACTADO</option>
                   <option value="RESPONDIO">RESPONDIO</option>
-                  <option value="NO_RESPONDIO">NO_RESPONDIO</option>
                   <option value="INHABILITADO">INHABILITADO</option>
                 </select>
               </div>
