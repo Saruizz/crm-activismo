@@ -48,7 +48,7 @@
     </div>
     
     <div *ngIf="!isLoading() && filteredRecords.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-      <div *ngFor="let r of filteredRecords" 
+      <div *ngFor="let r of filteredRecords; trackBy: trackById" 
            [class.border-yellow-500]="needsReminder(r)"
            [class.shadow-yellow-900/20]="needsReminder(r)"
            [class.ring-2]="needsReminder(r)"
