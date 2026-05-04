@@ -80,8 +80,15 @@ export class DashboardComponent implements OnInit {
       .sort((a, b) => {
         const aNeeds = this.needsReminder(a) ? 1 : 0;
         const bNeeds = this.needsReminder(b) ? 1 : 0;
-        return bNeeds - aNeeds; // Prioritize those needing reminders
+        if (bNeeds !== aNeeds) {
+          return bNeeds - aNeeds; // Prioritize those needing reminders
+        }
+        return a.id - b.id; // Maintain stable order by ID
       });
+  }
+
+  trackById(index: number, record: CrmRecord): number {
+    return record.id;
   }
 
   getStatusCounts(status: string): number {
@@ -140,7 +147,8 @@ export class DashboardComponent implements OnInit {
   }
 
   needsReminder(record: CrmRecord): boolean {
-    if (record.ESTADO === 'CONTACTADO' && record.FECHA_CONTACTO) {
+    const currentStatus = record._displayedStatus || record.ESTADO;
+    if (currentStatus === 'CONTACTADO' && record.FECHA_CONTACTO) {
       const diffHours = (new Date().getTime() - new Date(record.FECHA_CONTACTO).getTime()) / (1000 * 60 * 60);
       return diffHours > 24;
     }
