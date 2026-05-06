@@ -21,4 +21,5 @@ export interface CrmRecord {
   _originalMunicipio?: string;
   _originalDepartamento?: string;
   _originalEdad?: number;
+  _reminderSent?: boolean;
 }
