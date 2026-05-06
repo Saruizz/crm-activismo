@@ -168,6 +168,10 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  onReminderClick(record: CrmRecord) {
+    record._reminderSent = true;
+  }
+
   getWaLink(record: CrmRecord, isReminder: boolean = false): string {
     const groupLink = 'https://chat.whatsapp.com/CL71vUb9NNPDruoWKjj9jT';
     let messageText = '';
