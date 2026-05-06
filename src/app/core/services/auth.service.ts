@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   agentId = signal<string | null>(null);
-  apiUrl = signal<string>('https://script.google.com/macros/s/AKfycbwiZ1RTXVQbmYI0rjs7hVU7MYtOqyE6lSVTrxDrLoiMPtFfgLYZY5xiwA8Pej4UZzM/exec');
+  apiUrl = signal<string>('https://script.google.com/macros/s/AKfycbwXcBHwlVti3L4Nzyq4j7qs2N3KDQmG9AmA3_90z-0L1ffYlJZwqLYCbc81tA0cF69G/exec');
 
   private readonly INACTIVITY_LIMIT_MS = 2 * 60 * 60 * 1000; // 2 horas de inactividad
   private inactivityTimer: any;
