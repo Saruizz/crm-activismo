@@ -170,6 +170,8 @@ export class DashboardComponent implements OnInit {
 
   onReminderClick(record: CrmRecord) {
     record._reminderSent = true;
+    record.FECHA_RECORDATORIO = 'ENVIADO';
+    this.saveRecord(record);
   }
 
   getWaLink(record: CrmRecord, isReminder: boolean = false): string {
