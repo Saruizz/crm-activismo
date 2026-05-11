@@ -11,7 +11,7 @@ export interface CrmRecord {
   PERFILES: string;
   PERFILES_CONFIRMADOS: string;
   FECHA_CONTACTO: string;
-  FECHA_RECORDATORIO: string;
+  ESTADO_RECORDATORIO: string;
   ULTIMA_INTERACCION: string;
   INGRESO_AL_GRUPO: string;
   OBSERVACION: string;
