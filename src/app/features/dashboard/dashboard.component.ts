@@ -171,6 +171,20 @@ export class DashboardComponent implements OnInit {
     this.saveRecord(record);
   }
 
+  onEstadoChange(record: CrmRecord, newState: string) {
+    record.ESTADO = newState;
+    if (newState === 'INHABILITADO') {
+      record.COMPROMISO = 'INHABILITADO';
+    }
+  }
+
+  onCompromisoChange(record: CrmRecord, newCompromiso: string) {
+    record.COMPROMISO = newCompromiso;
+    if (newCompromiso === 'INHABILITADO') {
+      record.ESTADO = 'INHABILITADO';
+    }
+  }
+
   getWaLink(record: CrmRecord, isReminder: boolean = false): string {
     const groupLink = 'https://chat.whatsapp.com/CL71vUb9NNPDruoWKjj9jT';
     let messageText = '';
