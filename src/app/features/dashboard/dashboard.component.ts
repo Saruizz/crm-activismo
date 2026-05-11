@@ -162,15 +162,12 @@ export class DashboardComponent implements OnInit {
     if (!record.FECHA_CONTACTO) {
       const now = new Date();
       record.FECHA_CONTACTO = now.toISOString();
-      // Recordatorio a las 24h
-      const reminder = new Date(now.getTime() + (24 * 60 * 60 * 1000));
-      record.FECHA_RECORDATORIO = reminder.toISOString();
     }
   }
 
   onReminderClick(record: CrmRecord) {
     record._reminderSent = true;
-    record.FECHA_RECORDATORIO = 'ENVIADO';
+    record.ESTADO_RECORDATORIO = 'ENVIADO';
     this.saveRecord(record);
   }
 
