@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
   updateSearch(term: string) {
     this.searchTerm.set(term);
     const tokens = this.normalizeString(term).split(/\s+/).filter(t => t.length > 0);
-    
+
     if (tokens.length > 0) {
       // Buscar el primer registro que coincida en CUALQUIER estado
       const match = this.records().find(r => {
@@ -73,7 +73,7 @@ export class DashboardComponent implements OnInit {
       .filter(r => {
         if (searchTokens.length === 0) return true;
         const searchStr = this.normalizeString(`${r.NOMBRE || ''} ${r.CEDULA || ''} ${r.TELEFONO || ''}`);
-        
+
         // Verifica que TODOS los términos de búsqueda estén presentes
         return searchTokens.every(token => searchStr.includes(token));
       })
@@ -186,7 +186,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getWaLink(record: CrmRecord, isReminder: boolean = false): string {
-    const groupLink = 'https://chat.whatsapp.com/CL71vUb9NNPDruoWKjj9jT';
+    const groupLink = 'https://chat.whatsapp.com/JotVosYIM6kAwDyQWaQ9v4?s=cl&p=a&mlu=1';
     let messageText = '';
 
     if (isReminder) {
